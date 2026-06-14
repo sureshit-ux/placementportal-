@@ -1,0 +1,42 @@
+export const ROUTES = {
+  // Auth
+  LOGIN: "/login",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password",
+  // Admin
+  ADMIN_DASHBOARD: "/admin/dashboard",
+  ADMIN_USERS: "/admin/users",
+  ADMIN_STUDENTS: "/admin/students",
+  ADMIN_COORDINATORS: "/admin/coordinators",
+  ADMIN_COMPANIES: "/admin/companies",
+  ADMIN_APPLICATIONS: "/admin/applications",
+  ADMIN_CERTIFICATES: "/admin/certificates",
+  ADMIN_TOPICS: "/admin/topics",
+  ADMIN_SESSIONS: "/admin/sessions",
+  ADMIN_NEWS: "/admin/news",
+  ADMIN_BRANCHES: "/admin/branches",
+  ADMIN_SKILLS: "/admin/skills",
+  ADMIN_NOTIFICATIONS: "/admin/notifications",
+
+  // Coordinator
+  COORDINATOR_DASHBOARD: "/coordinator/dashboard",
+  COORDINATOR_STUDENTS: "/coordinator/students",
+  COORDINATOR_COMPANIES: "/coordinator/companies",
+  COORDINATOR_COMPANY_DETAILS: "/coordinator/companies/:id",
+  COORDINATOR_APPLICATIONS: "/coordinator/applications",
+  COORDINATOR_CERTIFICATES: "/coordinator/certificates",
+  COORDINATOR_SESSIONS: "/coordinator/sessions",
+  COORDINATOR_NEWS: "/coordinator/news",
+  COORDINATOR_NOTIFICATIONS: "/coordinator/notifications",
+  COORDINATOR_PROFILE: "/coordinator/profile",
+  // Student
+  STUDENT_DASHBOARD: "/student/dashboard",
+  STUDENT_PROFILE: "/student/profile",
+  STUDENT_COMPANIES: "/student/companies",
+  STUDENT_COMPANY_DETAILS: "/student/companies/:id",
+  STUDENT_APPLICATIONS: "/student/applications",
+  STUDENT_CERTIFICATES: "/student/certificates",
+  STUDENT_SESSIONS: "/student/sessions",
+  STUDENT_NEWS: "/student/news",
+  STUDENT_NOTIFICATIONS: "/student/notifications",
+};
