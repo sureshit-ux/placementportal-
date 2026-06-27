@@ -20,7 +20,7 @@ import {
 } from "../api/coordinatorApi";
 const CoordinatorCompanyDetailsPage = () => {
     const { id } = useParams();
-
+    const navigate = useNavigate();
     const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true);
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
@@ -263,6 +263,17 @@ const CoordinatorCompanyDetailsPage = () => {
                     }
                 >
                     Delete Company
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() =>
+                        navigate(
+                            `/coordinator/companies/${company.id}/applications`
+                        )
+                    }
+                >
+                    View Applications
                 </Button>
             </Box>
 

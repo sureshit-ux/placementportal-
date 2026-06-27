@@ -1,5 +1,6 @@
 import axiosInstance from "../../../services/axiosInstance";
 
+
 export const getMyCoordinatorProfile = async () => {
     const response = await axiosInstance.get(
         "/api/coordinator-profiles/me"
@@ -50,7 +51,7 @@ export const getStudentDetails =
     async (studentId) => {
         const response =
             await axiosInstance.get(
-                `/api/coordinator/students/${studentId}`
+                `/api/students/${studentId}`
             );
 
         return response.data;
@@ -111,3 +112,213 @@ export const deleteCompany =
             `/api/companies/${companyId}`
         );
     };
+
+export const getApplications = async (
+    status = "APPLIED"
+) => {
+    const response =
+        await axiosInstance.get(
+            "/api/applications",
+            {
+                params: {
+                    status,
+                    page: 0,
+                    size: 10,
+                    sort: "id,DESC",
+                },
+            }
+        );
+
+    return response.data;
+};
+export const getApplicationById = async (
+    applicationId
+) => {
+    const response = await axiosInstance.get(
+        `/api/applications/${applicationId}`
+    );
+
+    return response.data;
+};
+
+export const shortlistApplication = async (
+    applicationId
+) => {
+    const response = await axiosInstance.put(
+        `/api/applications/${applicationId}/shortlist`
+    );
+
+    return response.data;
+};
+
+export const selectApplication = async (
+    applicationId
+) => {
+    const response = await axiosInstance.put(
+        `/api/applications/${applicationId}/select`
+    );
+
+    return response.data;
+};
+
+export const rejectApplication = async (
+    applicationId
+) => {
+    const response = await axiosInstance.put(
+        `/api/applications/${applicationId}/reject`
+    );
+
+    return response.data;
+};
+
+export const getApplicationsByCompany = async (
+    companyId,
+    status
+) => {
+    const response = await axiosInstance.get(
+        `/api/applications/company/${companyId}`,
+        {
+            params: {
+                status,
+                page: 0,
+                size: 10,
+                sort: "id,DESC",
+            },
+        }
+    );
+
+    return response.data;
+};
+export const getApplicationsByStudent = async (
+    studentId,
+    status
+) => {
+    const response = await axiosInstance.get(
+        `/api/applications/student/${studentId}`,
+        {
+            params: {
+                status,
+                page: 0,
+                size: 10,
+                sort: "id,DESC",
+            },
+        }
+    );
+
+    return response.data;
+};
+export const getCertificatesByStatus = async (
+    status,
+    page = 0,
+    size = 10
+) => {
+    const response = await axiosInstance.get(
+        `/api/certificates/status/${status}`,
+        {
+            params: {
+                page,
+                size,
+                sort: "id,DESC",
+            },
+        }
+    );
+
+    return response.data;
+};
+export const approveCertificate = async (
+    certificateId
+) => {
+    const response = await axiosInstance.put(
+        `/api/certificates/${certificateId}/approve`
+    );
+
+    return response.data;
+};
+
+export const rejectCertificate = async (
+    certificateId
+) => {
+    const response = await axiosInstance.put(
+        `/api/certificates/${certificateId}/reject`
+    );
+
+    return response.data;
+};
+export const createSession = async (payload) => {
+    const response = await axiosInstance.post(
+        "/api/sessions",
+        payload
+    );
+
+    return response.data;
+};
+export const getSessions = async () => {
+    const response =
+        await axiosInstance.get(
+            "/api/sessions"
+        );
+
+    return response.data;
+};
+export const getSessionById = async (
+    sessionId
+) => {
+
+    const response =
+        await axiosInstance.get(
+            `/api/sessions/${sessionId}`
+        );
+
+    return response.data;
+};
+export const deleteSession = async (
+    sessionId
+) => {
+
+    await axiosInstance.delete(
+        `/api/sessions/${sessionId}`
+    );
+
+};
+export const getUpcomingSessions =
+    async () => {
+
+        const response =
+            await axiosInstance.get(
+                "/api/sessions/upcoming"
+            );
+
+        return response.data;
+    };
+export const getSessionsByDateRange =
+    async (
+        startDate,
+        endDate
+    ) => {
+
+        const response =
+            await axiosInstance.get(
+                "/api/sessions/date-range",
+                {
+                    params: {
+                        startDate,
+                        endDate,
+                        page: 0,
+                        size: 10,
+                        sort:
+                            "sessionDate,ASC",
+                    },
+                }
+            );
+
+        return response.data;
+    };
+export const getStudentByRollNumber = async (
+    rollNumber
+) => {
+    const response = await axiosInstance.get(
+        `/api/students/roll-number/${rollNumber}`
+    );
+
+    return response.data;
+};

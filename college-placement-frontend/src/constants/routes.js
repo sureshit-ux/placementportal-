@@ -9,6 +9,8 @@ export const ROUTES = {
   ADMIN_STUDENTS: "/admin/students",
   ADMIN_COORDINATORS: "/admin/coordinators",
   ADMIN_COMPANIES: "/admin/companies",
+  ADMIN_COMPANY_DETAILS: "/admin/companies/:id",
+  ADMIN_COMPANY_APPLICATIONS:"/admin/companies/:id/applications",
   ADMIN_APPLICATIONS: "/admin/applications",
   ADMIN_CERTIFICATES: "/admin/certificates",
   ADMIN_TOPICS: "/admin/topics",
@@ -27,8 +29,11 @@ export const ROUTES = {
   COORDINATOR_CERTIFICATES: "/coordinator/certificates",
   COORDINATOR_SESSIONS: "/coordinator/sessions",
   COORDINATOR_NEWS: "/coordinator/news",
+
+  COORDINATOR_TOPICS: "/coordinator/topics",
   COORDINATOR_NOTIFICATIONS: "/coordinator/notifications",
   COORDINATOR_PROFILE: "/coordinator/profile",
+  COORDINATOR_COMPANY_APPLICATIONS:"/coordinator/companies/:id/applications",
   // Student
   STUDENT_DASHBOARD: "/student/dashboard",
   STUDENT_PROFILE: "/student/profile",
@@ -39,4 +44,6 @@ export const ROUTES = {
   STUDENT_SESSIONS: "/student/sessions",
   STUDENT_NEWS: "/student/news",
   STUDENT_NOTIFICATIONS: "/student/notifications",
+  STUDENT_TOPICS: "/student/topics",
+
 };

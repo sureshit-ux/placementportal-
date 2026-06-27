@@ -19,7 +19,10 @@ const CoordinatoreCompaniesPage = () => {
     const [filter, setFilter] = useState("active");
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [openCreateDialog, setOpenCreateDialog] = useState(false);
+
     const fetchCompanies = async () => {
         setLoading(true);
 

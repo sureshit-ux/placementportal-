@@ -4,7 +4,8 @@ import {
 } from "@mui/icons-material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
     Card,
     CardContent,
@@ -20,6 +21,9 @@ import {
 const CertificateTemplateCard = ({
                                      certificate,
                                      onDelete,
+                                     onApprove,
+                                     onReject,
+                                     showActions = false,
                                  }) => {
     const getStatusColor = (
         status
@@ -71,16 +75,16 @@ const CertificateTemplateCard = ({
                         mb: 1,
                     }}
                 >
-                    <IconButton
-                        color="error"
-                        onClick={() =>
-                            onDelete?.(
-                                certificate.id
-                            )
-                        }
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+                    {onDelete && (
+                        <IconButton
+                            color="error"
+                            onClick={() =>
+                                onDelete(certificate.id)
+                            }
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    )}
                 </Box>
 
                 {/* Header */}
@@ -251,6 +255,44 @@ const CertificateTemplateCard = ({
                         >
                             View Certificate
                         </Button>
+                        {showActions &&
+                            certificate.status === "PENDING" && (
+                                <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    justifyContent="center"
+                                    sx={{ mt: 2 }}
+                                >
+                                    <IconButton
+                                        color="success"
+                                        size="large"
+                                        onClick={() =>
+                                            onApprove?.(
+                                                certificate.id
+                                            )
+                                        }
+                                    >
+                                        <CheckCircleIcon
+                                            fontSize="large"
+                                        />
+                                    </IconButton>
+
+                                    <IconButton
+                                        color="error"
+                                        size="large"
+                                        onClick={() =>
+                                            onReject?.(
+                                                certificate.id
+                                            )
+                                        }
+                                    >
+                                        <CancelIcon
+                                            fontSize="large"
+                                        />
+                                    </IconButton>
+                                </Stack>
+                            )}
+
                     </Box>
 
                     {/* Footer */}

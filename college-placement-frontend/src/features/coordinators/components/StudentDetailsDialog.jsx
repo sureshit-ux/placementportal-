@@ -27,11 +27,15 @@ import {
 
     Paper,
 } from "@mui/material";
+import { useState } from "react";
+import StudentApplicationsDialog from "./StudentApplicationsDialog";
 const StudentDetailsDialog = ({
                                   open,
                                   onClose,
                                   student,
                               }) => {
+    const [openApplications, setOpenApplications] =
+        useState(false);
     return (
         <Dialog
             open={open}
@@ -318,11 +322,25 @@ const StudentDetailsDialog = ({
 
             <DialogActions>
                 <Button
-                    onClick={onClose}
+                    variant="contained"
+                    onClick={() =>
+                        setOpenApplications(true)
+                    }
                 >
+                    Application History
+                </Button>
+
+                <Button onClick={onClose}>
                     Close
                 </Button>
             </DialogActions>
+            <StudentApplicationsDialog
+                open={openApplications}
+                onClose={() =>
+                    setOpenApplications(false)
+                }
+                studentId={student?.id}
+            />
         </Dialog>
     );
 };

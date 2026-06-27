@@ -5,13 +5,18 @@ import IconButton from "@mui/material/IconButton";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import StudentDetailsDialog
     from "../components/StudentDetailsDialog";
+import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import InputBase from "@mui/material/InputBase";
+import Paper from "@mui/material/Paper";
+import Divider from "@mui/material/Divider";
 import SearchStudentsDialog from "../components/SearchStudentsDialog";
 import {
     Box,
     Button,
     Typography,
     CircularProgress,
-    Paper,
+
     Table,
     TableBody,
     TableCell,
@@ -25,12 +30,14 @@ import {
 import { getCoordinatorStudents } from "../api/coordinatorApi";
 import {
     searchStudents,
+    getStudentByRollNumber
 } from "../api/coordinatorApi";
 const CoordinatorStudentsPage = () => {
     const [
         openSearchDialog,
         setOpenSearchDialog,
     ] = useState(false);
+    const [rollNumber, setRollNumber] = useState("");
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [
@@ -104,6 +111,28 @@ const CoordinatorStudentsPage = () => {
             setLoading(false);
         }
     };
+    const handleRollNumberSearch = async () => {
+        if (!rollNumber.trim()) {
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response =
+                await getStudentByRollNumber(
+                    rollNumber
+                );
+
+            setStudents([response]);
+        } catch (error) {
+            console.error(error);
+
+            setStudents([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -118,7 +147,25 @@ const CoordinatorStudentsPage = () => {
             </Box>
         );
     }
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "SELECTED":
+                return "success";
 
+            case "REJECTED":
+                return "error";
+
+            default:
+                return "primary";
+        }
+    };
+    const headerStyle = {
+        fontWeight: 700,
+        bgcolor: "primary.main",
+        color: "white",
+        fontSize: "0.95rem",
+        borderBottom: "none",
+    };
     return (
         <Box>
             <Box
@@ -129,12 +176,77 @@ const CoordinatorStudentsPage = () => {
                     mb: 3,
                 }}
             >
-                <Typography
-                    variant="h5"
-                    fontWeight={700}
+
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        mb: 2,
+                    }}
                 >
-                    Students
-                </Typography>
+                    <Paper
+                        component="form"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleRollNumberSearch();
+                        }}
+                        sx={{
+                            p: "4px 10px",
+                            display: "flex",
+                            alignItems: "center",
+                            width: 650,
+                            height: 60,
+                            borderRadius: "40px",
+                            boxShadow: 3,
+                        }}
+                    >
+                        <IconButton
+                            type="submit"
+                            sx={{ p: "10px" }}
+                        >
+                            <SearchIcon />
+                        </IconButton>
+
+                        <InputBase
+                            sx={{
+                                ml: 1,
+                                flex: 1,
+                                fontSize: "1rem",
+                            }}
+                            placeholder="Search Roll Number"
+                            value={rollNumber}
+                            onChange={(e) =>
+                                setRollNumber(
+                                    e.target.value
+                                )
+                            }
+                        />
+
+                        <Divider
+                            sx={{
+                                height: 28,
+                                m: 0.5,
+                            }}
+                            orientation="vertical"
+                        />
+
+                        <IconButton
+                            onClick={() =>
+                                setOpenSearchDialog(true)
+                            }
+                            sx={{ p: "10px" }}
+                        >
+                            <FilterListIcon />
+                        </IconButton>
+                    </Paper>
+                </Box>
+
+
+
+
+
 
                 <Button
                     variant="outlined"
@@ -143,16 +255,9 @@ const CoordinatorStudentsPage = () => {
                 >
                     Refresh
                 </Button>
-                <Button
-                    variant="contained"
-                    onClick={() =>
-                        setOpenSearchDialog(true)
-                    }
-                >
-                    Search Students
-                </Button>
 
             </Box>
+
             {students.length === 0 && (
                 <Typography
                     color="text.secondary"
@@ -164,32 +269,32 @@ const CoordinatorStudentsPage = () => {
             <TableContainer
                 component={Paper}
                 sx={{
-                    maxHeight: "70vh"
+                    height: "75vh",
+                    overflowY: "auto",
                 }}
             >
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <TableCell>
+                            <TableCell sx={headerStyle}>
                                 Name
                             </TableCell>
 
-                            <TableCell>
+                            <TableCell sx={headerStyle}>
                                 Roll Number
                             </TableCell>
 
-                            <TableCell>
+                            <TableCell sx={headerStyle}>
                                 Year
                             </TableCell>
-
-                            <TableCell>
+                            <TableCell sx={headerStyle}>
                                 CGPA
                             </TableCell>
 
-                            <TableCell>
+                            <TableCell sx={headerStyle}>
                                 Placement Status
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={headerStyle}>
                                 Actions
                             </TableCell>
                         </TableRow>
@@ -199,9 +304,13 @@ const CoordinatorStudentsPage = () => {
                         {students.map(
                             (student) => (
                                 <TableRow
-                                    key={
-                                        student.id
-                                    }
+                                    key={student.id}
+                                    sx={{
+                                        transition: "background-color 0.2s",
+                                        "&:hover": {
+                                            backgroundColor: "action.hover",
+                                        },
+                                    }}
                                 >
                                     <TableCell>
                                         {
@@ -230,22 +339,12 @@ const CoordinatorStudentsPage = () => {
                                     <TableCell>
                                         <Chip
                                             label={student.placementStatus}
-                                            color={
-                                                student.placementStatus ===
-                                                "SELECTED"
-                                                    ? "success"
-                                                    : student.placementStatus ===
-                                                    "REJECTED"
-                                                        ? "error"
-                                                        : student.placementStatus ===
-                                                        "ELIGIBLE"
-                                                            ? "primary"
-                                                            : student.placementStatus ===
-                                                            "APPLIED"
-                                                                ? "secondary"
-                                                                : "warning"
-                                            }
+                                            color={getStatusColor(
+                                                student.placementStatus
+                                            )}
                                             size="small"
+                                            variant="filled"
+
                                         />
                                     </TableCell>
                                     <TableCell>

@@ -10,6 +10,7 @@ import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "../layouts/ProtectedRoute";
 import StudentApplicationsPage from "../features/applications/pages/StudentApplicationsPage.jsx";
 
+
 // ─── Lazy Imports ─────────────────────────────────────────────────────────
 
 // Auth
@@ -24,11 +25,37 @@ const StudentProfilePage = lazy(() => import("../features/students/pages/Student
 const StudentCompaniesPage = lazy(() => import("../features/companies/pages/StudentCompaniesPage"));
 const StudentCompanyDetailsPage = lazy(() => import("../features/companies/pages/StudentCompanyDetailsPage"));
 const StudentCertificatesPage = lazy(() => import("../features/certificates/pages/StudentCertificatesPage"));
+const StudentSessionsPage = lazy(() => import("../features/sessions/pages/StudentSessionsPage"));
+
+
 const CoordinatorProfilePage = lazy(() => import("../features/coordinators/pages/CoordinatorProfilePage"));
 const CoordinatorStudentsPage = lazy(() => import("../features/coordinators/pages/CoordinatorStudentsPage"));
 const CoordinatorCompaniesPage = lazy(() => import("../features/coordinators/pages/CoordinatorCompaniesPage"));
 const CoordinatorCompanyDetailsPage = lazy(() => import("../features/coordinators/pages/CoordinatoreCompanyDetails.jsx"));
-// Stub placeholder for unbuilt pages
+const CoordinatorApplicationsPage = lazy(() => import("../features/coordinators/pages/CoordinatorApplicationsPage"));
+const CoordinatorCompanyApplicationsPage  = lazy(() => import("../features/coordinators/pages/CoordinatorCompanyApplicationsPage"));
+const CoordinatorCertificatesPage  = lazy(() => import("../features/coordinators/pages/CoordinatorCertificatesPage"));
+const CoordinatorSessionsPage = lazy(() => import("../features/coordinators/pages/CoordinatorSessionsPage"));
+const CoordinatorTopicsPage = lazy(() => import("../features/topics/pages/CoordinatorTopicsPage"));
+const StudentTopicsPage = lazy(() => import("../features/topics/pages/StudentTopicsPage"));
+const CoordinatorNewsPage = lazy(() => import("../features/news/pages/CoordinatorNewsPage"));
+const StudentNewsPages = lazy(() => import("../features/news/pages/StudentNewsPages.jsx"));
+//admin
+const AdminCompaniesPage = lazy(() => import("../features/admin/pages/AdminCompaniesPage"));
+const AdminCompanyDetailsPage = lazy(() => import("../features/admin/pages/AdminCompanyDetailsPage"));
+const AdminCompanyApplicationsPage  = lazy(() => import("../features/admin/pages/AdminCompanyApplicationsPage"));
+const AdminApplicationsPage = lazy(() => import("../features/admin/pages/AdminApplicationsPage"));
+const AdminCertificatesPage  = lazy(() => import("../features/admin/pages/AdminCertificatesPage"));
+const AdminSessionsPage = lazy(() => import("../features/admin/pages/AdminSessionsPage"));
+const AdminTopicsPage = lazy(() => import("../features/admin/pages/AdminTopicsPage"));
+const AdminNewsPage = lazy(() => import("../features/admin/pages/AdminNewsPage"));
+const AdminStudentsPage = lazy(() => import("../features/admin/pages/AdminStudentsPage"));
+const AdminCoordinatorsPage = lazy(() => import("../features/admin/pages/AdminCoordinatorsPage"));
+const AdminUsersPage = lazy(() => import("../features/admin/pages/AdminUsersPage"));
+const AdminBranchesPage = lazy(() => import("../features/admin/pages/AdminBranchesPage"));
+
+
+
 
 const ComingSoon = ({ title }) => (
   <div style={{ padding: 32, textAlign: "center" }}>
@@ -54,16 +81,18 @@ const AppRoutes = () => (
       <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN]} />}>
         <Route element={<MainLayout />}>
           <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
-          <Route path={ROUTES.ADMIN_USERS} element={<ComingSoon title="Users" />} />
-          <Route path={ROUTES.ADMIN_STUDENTS} element={<ComingSoon title="Students" />} />
-          <Route path={ROUTES.ADMIN_COORDINATORS} element={<ComingSoon title="Coordinators" />} />
-          <Route path={ROUTES.ADMIN_COMPANIES} element={<ComingSoon title="Companies" />} />
-          <Route path={ROUTES.ADMIN_APPLICATIONS} element={<ComingSoon title="Applications" />} />
-          <Route path={ROUTES.ADMIN_CERTIFICATES} element={<ComingSoon title="Certificates" />} />
-          <Route path={ROUTES.ADMIN_TOPICS} element={<ComingSoon title="Topics" />} />
-          <Route path={ROUTES.ADMIN_SESSIONS} element={<ComingSoon title="Sessions" />} />
-          <Route path={ROUTES.ADMIN_NEWS} element={<ComingSoon title="News" />} />
-          <Route path={ROUTES.ADMIN_BRANCHES} element={<ComingSoon title="Branches" />} />
+          <Route path={ROUTES.ADMIN_USERS} element={<AdminUsersPage/>} />
+          <Route path={ROUTES.ADMIN_STUDENTS} element={<AdminStudentsPage />} />
+          <Route path={ROUTES.ADMIN_COORDINATORS} element={<AdminCoordinatorsPage/>} />
+          <Route path={ROUTES.ADMIN_COMPANIES} element={<AdminCompaniesPage/>} />
+          <Route path={ROUTES. ADMIN_COMPANY_DETAILS} element={<AdminCompanyDetailsPage />}/>
+          <Route path={ROUTES.ADMIN_COMPANY_APPLICATIONS} element={<AdminCompanyApplicationsPage />}/>
+          <Route path={ROUTES.ADMIN_APPLICATIONS} element={<AdminApplicationsPage/>} />
+          <Route path={ROUTES.ADMIN_CERTIFICATES} element={<AdminCertificatesPage/>} />
+          <Route path={ROUTES.ADMIN_TOPICS} element={<AdminTopicsPage/>} />
+          <Route path={ROUTES.ADMIN_SESSIONS} element={<AdminSessionsPage/>} />
+          <Route path={ROUTES.ADMIN_NEWS} element={<AdminNewsPage />} />
+          <Route path={ROUTES.ADMIN_BRANCHES} element={<AdminBranchesPage />} />
           <Route path={ROUTES.ADMIN_SKILLS} element={<ComingSoon title="Skills" />} />
           <Route path={ROUTES.ADMIN_NOTIFICATIONS} element={<ComingSoon title="Notifications" />} />
         </Route>
@@ -74,14 +103,16 @@ const AppRoutes = () => (
         <Route element={<MainLayout />}>
           <Route path={ROUTES.COORDINATOR_DASHBOARD} element={<CoordinatorDashboard />} />
           <Route path={ROUTES.COORDINATOR_COMPANIES} element={<CoordinatorCompaniesPage />} />
-          <Route path={ROUTES.COORDINATOR_APPLICATIONS} element={<ComingSoon title="Applications" />} />
-          <Route path={ROUTES.COORDINATOR_CERTIFICATES} element={<ComingSoon title="Certificates" />} />
-          <Route path={ROUTES.COORDINATOR_SESSIONS} element={<ComingSoon title="Sessions" />} />
-          <Route path={ROUTES.COORDINATOR_NEWS} element={<ComingSoon title="News" />} />
+          <Route path={ROUTES.COORDINATOR_CERTIFICATES} element={<CoordinatorCertificatesPage/>} />
+          <Route path={ROUTES.COORDINATOR_SESSIONS} element={<CoordinatorSessionsPage />} />
+          <Route path={ROUTES.COORDINATOR_NEWS} element={< CoordinatorNewsPage/>} />
           <Route path={ROUTES.COORDINATOR_NOTIFICATIONS} element={<ComingSoon title="Notifications" />} />
           <Route path={ROUTES.COORDINATOR_PROFILE} element={<CoordinatorProfilePage />}/>
           <Route path={ROUTES.COORDINATOR_STUDENTS} element={<CoordinatorStudentsPage />}/>
           <Route path={ROUTES. COORDINATOR_COMPANY_DETAILS} element={<CoordinatorCompanyDetailsPage />}/>
+          <Route path={ROUTES.COORDINATOR_APPLICATIONS} element={<CoordinatorApplicationsPage />}/>
+          <Route path={ROUTES.COORDINATOR_COMPANY_APPLICATIONS} element={<CoordinatorCompanyApplicationsPage />}/>
+          <Route path={ROUTES.COORDINATOR_TOPICS} element={<CoordinatorTopicsPage />} />
         </Route>
       </Route>
 
@@ -93,10 +124,11 @@ const AppRoutes = () => (
           <Route path={ROUTES.STUDENT_COMPANIES} element={<StudentCompaniesPage />}/>
           <Route path={ROUTES.STUDENT_APPLICATIONS} element={<StudentApplicationsPage />}/>
           <Route path={ROUTES.STUDENT_CERTIFICATES} element={<StudentCertificatesPage />}/>
-          <Route path={ROUTES.STUDENT_SESSIONS} element={<ComingSoon title="Sessions" />} />
-          <Route path={ROUTES.STUDENT_NEWS} element={<ComingSoon title="News" />} />
+          <Route path={ROUTES.STUDENT_SESSIONS} element={< StudentSessionsPage/>} />
+          <Route path={ROUTES.STUDENT_NEWS} element={<StudentNewsPages />} />
           <Route path={ROUTES.STUDENT_NOTIFICATIONS} element={<ComingSoon title="Notifications" />} />
           <Route path={ROUTES.STUDENT_COMPANY_DETAILS} element={<StudentCompanyDetailsPage />}/>
+          <Route path={ROUTES.STUDENT_TOPICS} element={<StudentTopicsPage />} />
         </Route>
       </Route>
 
