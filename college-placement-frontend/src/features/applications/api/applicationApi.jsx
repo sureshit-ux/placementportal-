@@ -11,7 +11,20 @@ export const applyToCompany = async (companyId) => {
 };
 
 
-export const getMyApplications = async () => {
-    const response = await axiosInstance.get("/api/applications/my");
+export const getMyApplications = async (
+    page = 0,
+    size = 12
+) => {
+    const response = await axiosInstance.get(
+        "/api/applications/my",
+        {
+            params: {
+                page,
+                size,
+                sort: "appliedAt,DESC",
+            },
+        }
+    );
+
     return response.data;
 };

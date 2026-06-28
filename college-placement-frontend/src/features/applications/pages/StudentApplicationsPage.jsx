@@ -3,18 +3,27 @@ import { useEffect, useState } from "react";
 import {
     Box,
     Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
+
     Grid,
     CircularProgress,
+    ToggleButton,
+    ToggleButtonGroup,
+    IconButton,
 } from "@mui/material";
-
+import SearchIcon from "@mui/icons-material/Search";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { getMyApplications } from "../api/applicationApi";
 import ApplicationCard from "../components/ApplicationCard";
-const StudentApplicationsPage = () => {
 
+
+
+const StudentApplicationsPage = () => {
+    const [page, setPage] = useState(0);
+
+    const [size] = useState(12);
+
+    const [totalPages, setTotalPages] = useState(0);
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState("all");
@@ -22,8 +31,12 @@ const StudentApplicationsPage = () => {
         setLoading(true);
 
         try {
-            const response = await getMyApplications();
+            const response = await getMyApplications(
+                page,
+                size
+            );
             setApplications(response.content || []);
+            setTotalPages(response.totalPages || 0);
         } catch (error) {
             console.error(error);
         } finally {
@@ -32,7 +45,10 @@ const StudentApplicationsPage = () => {
     };
     useEffect(() => {
         fetchApplications();
-    }, []);
+    }, [page]);
+    useEffect(() => {
+        setPage(0);
+    }, [filter]);
     const filteredApplications =
         filter === "all"
             ? applications
@@ -41,45 +57,81 @@ const StudentApplicationsPage = () => {
             );
     return (
         <Box>
+
+            <Box
+                sx={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    backgroundColor: "#f5f7fb",
+                    pt: 1,
+                    pb: 2,
+                }}
+            >
             <Typography
                 variant="h5"
                 fontWeight={700}>
                 My Applications
             </Typography>
-            <FormControl
-                size="small"
-                sx={{ minWidth: 220, mb: 3,mt:2 }}
-            >
-                <InputLabel>Status</InputLabel>
-
-                <Select
+                <ToggleButtonGroup
+                    exclusive
                     value={filter}
-                    label="Status"
-                    onChange={(e) =>
-                        setFilter(e.target.value)
-                    }
+                    onChange={(e, value) => {
+                        if (value !== null) {
+                            setFilter(value);
+                        }
+                    }}
+                    sx={{
+                        mt: 2,
+                        backgroundColor: "#F5F7FA",
+                        borderRadius: "14px",
+                        padding: "4px",
+
+                        "& .MuiToggleButton-root": {
+                            border: "none",
+                            borderRadius: "10px",
+                            px: 3,
+                            py: 1,
+                            textTransform: "none",
+                            fontWeight: 600,
+                            color: "#555",
+
+                            "&:hover": {
+                                backgroundColor: "#EAF2FF",
+                                transform: "translateY(-2px)",
+                            },
+                        },
+
+                        "& .Mui-selected": {
+                            backgroundColor: "#1976d2 !important",
+                            color: "#fff !important",
+                            boxShadow:
+                                "0 8px 20px rgba(25,118,210,.30)",
+                            transform: "translateY(-2px)",
+                        },
+                    }}
                 >
-                    <MenuItem value="all">
-                        All Applications
-                    </MenuItem>
+                    <ToggleButton value="all">
+                        All
+                    </ToggleButton>
 
-                    <MenuItem value="APPLIED">
+                    <ToggleButton value="APPLIED">
                         Applied
-                    </MenuItem>
+                    </ToggleButton>
 
-                    <MenuItem value="SHORTLISTED">
+                    <ToggleButton value="SHORTLISTED">
                         Shortlisted
-                    </MenuItem>
+                    </ToggleButton>
 
-                    <MenuItem value="SELECTED">
+                    <ToggleButton value="SELECTED">
                         Selected
-                    </MenuItem>
+                    </ToggleButton>
 
-                    <MenuItem value="REJECTED">
+                    <ToggleButton value="REJECTED">
                         Rejected
-                    </MenuItem>
-                </Select>
-            </FormControl>
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
             {loading && (
                 <Box
                     sx={{
@@ -92,13 +144,41 @@ const StudentApplicationsPage = () => {
             )}
             {!loading &&
                 filteredApplications.length === 0 && (
-                    <Typography color="text.secondary">
-                        No applications found.
-                    </Typography>
+                    <Box
+                        sx={{
+                            textAlign:"center",
+                            mt:8
+                        }}
+                    >
+
+                        <SearchIcon
+                            sx={{
+                                fontSize:70,
+                                color:"#c7c7c7"
+                            }}
+                        />
+
+                        <Typography
+                            variant="h6"
+                            color="text.secondary"
+                        >
+
+                            No Applications found
+
+                        </Typography>
+
+                    </Box>
                 )}
             {!loading &&
                 filteredApplications.length > 0 && (
-                    <Grid container spacing={2}>
+                    <Box
+                        sx={{
+                            mt: 2,
+                            maxWidth: 1200,
+                            mx: "auto",
+                        }}
+                    >
+                        <Grid container spacing={3}>
                         {filteredApplications.map(
                             (application) => (
                                 <Grid
@@ -114,7 +194,63 @@ const StudentApplicationsPage = () => {
                             )
                         )}
                     </Grid>
+                    </Box>
                 )}
+            {!loading && totalPages > 1 && (
+                <>
+                    <IconButton
+                        disabled={page === 0}
+                        onClick={() =>
+                            setPage((prev) => prev - 1)
+                        }
+                        sx={{
+                            position: "fixed",
+                            left: 30,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            width: 54,
+                            height: 54,
+                            borderRadius: "50%",
+                            bgcolor: "white",
+                            boxShadow: 3,
+                            zIndex: 1000,
+
+                            "&:hover": {
+                                bgcolor: "#1976d2",
+                                color: "#fff",
+                            },
+                        }}
+                    >
+                        <KeyboardArrowLeftIcon />
+                    </IconButton>
+
+                    <IconButton
+                        disabled={page === totalPages - 1}
+                        onClick={() =>
+                            setPage((prev) => prev + 1)
+                        }
+                        sx={{
+                            position: "fixed",
+                            right: 30,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            width: 54,
+                            height: 54,
+                            borderRadius: "50%",
+                            bgcolor: "white",
+                            boxShadow: 3,
+                            zIndex: 1000,
+
+                            "&:hover": {
+                                bgcolor: "#1976d2",
+                                color: "#fff",
+                            },
+                        }}
+                    >
+                        <KeyboardArrowRightIcon />
+                    </IconButton>
+                </>
+            )}
         </Box>
     );
 };

@@ -12,13 +12,17 @@ export const createTopic = async (
 
     return response.data;
 };
-export const getTopics = async () => {
+export const getTopics = async (
+    page = 0,
+    size = 12
+) => {
+
     const response = await axiosInstance.get(
         "/api/topics",
         {
             params: {
-                page: 0,
-                size: 100,
+                page,
+                size,
                 sort: "createdAt,DESC",
             },
         }
@@ -56,14 +60,17 @@ export const deleteTopic = async (id) => {
 
     return response.data;
 };
-export const getGlobalTopics = async () => {
+export const getGlobalTopics = async (
+    page = 0,
+    size = 12
+) => {
 
     const response = await axiosInstance.get(
         "/api/topics/global",
         {
             params: {
-                page: 0,
-                size: 100,
+                page,
+                size,
                 sort: "createdAt,DESC",
             },
         }
@@ -73,15 +80,17 @@ export const getGlobalTopics = async () => {
 };
 
 export const getTopicsByBranch = async (
-    branchId
+    branchId,
+    page = 0,
+    size = 12
 ) => {
 
     const response = await axiosInstance.get(
         `/api/topics/branch/${branchId}`,
         {
             params: {
-                page: 0,
-                size: 100,
+                page,
+                size,
                 sort: "createdAt,DESC",
             },
         }

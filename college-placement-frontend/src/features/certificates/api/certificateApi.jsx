@@ -8,9 +8,20 @@ export const createCertificate = async (payload) => {
 
     return response.data;
 };
-export const getMyCertificates = async () => {
+export const getMyCertificates = async (
+    page = 0,
+    size = 9
+) => {
+
     const response = await axiosInstance.get(
-        "/api/certificates/my"
+        "/api/certificates/my",
+        {
+            params: {
+                page,
+                size,
+                sort: "id,DESC",
+            },
+        }
     );
 
     return response.data;

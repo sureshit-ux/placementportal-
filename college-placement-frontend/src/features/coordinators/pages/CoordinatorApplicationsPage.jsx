@@ -3,11 +3,9 @@ import { useEffect, useState } from "react";
 import {
     Box,
     Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
 
+    ToggleButton,
+    ToggleButtonGroup,
     CircularProgress,
     Table,
     TableBody,
@@ -19,6 +17,13 @@ import {
     Chip,
 
 } from "@mui/material";
+import KeyboardArrowLeftIcon
+    from "@mui/icons-material/KeyboardArrowLeft";
+
+import KeyboardArrowRightIcon
+    from "@mui/icons-material/KeyboardArrowRight";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ApplicationDetailsDialog from "../components/ApplicationDetailsDialog";
 
@@ -32,6 +37,9 @@ import IconButton from "@mui/material/IconButton";
 
 
 const CoordinatorApplicationsPage = () => {
+    const [page, setPage] = useState(0);
+    const [size] = useState(100);
+    const [totalPages, setTotalPages] = useState(0);
     const [status, setStatus] =
         useState("APPLIED");
 
@@ -52,21 +60,24 @@ const CoordinatorApplicationsPage = () => {
             try {
                 const response =
                     await getApplications(
-                        status
+                        status,
+                        page,
+                        size
                     );
 
-                setApplications(
-                    response.content || []
-                );
+                setApplications(response.content || []);
+                setTotalPages(response.totalPages || 0);
             } catch (error) {
                 console.error(error);
             } finally {
                 setLoading(false);
             }
         };
-
     useEffect(() => {
         fetchApplications();
+    }, [status, page]);
+    useEffect(() => {
+        setPage(0);
     }, [status]);
     const handleViewApplication = async (
         applicationId
@@ -102,49 +113,69 @@ const CoordinatorApplicationsPage = () => {
             >
                 Applications
             </Typography>
-
             <Box
                 sx={{
                     mt: 2,
                     mb: 4,
+                    display: "flex",
+                    justifyContent: "center",
                 }}
             >
-                <FormControl
-                    size="small"
+                <ToggleButtonGroup
+                    exclusive
+                    value={status}
+                    onChange={(e, value) => {
+                        if (value !== null) {
+                            setStatus(value);
+                        }
+                    }}
                     sx={{
-                        minWidth: 220,
+                        backgroundColor: "#F5F7FA",
+                        borderRadius: "14px",
+                        padding: "4px",
+
+                        "& .MuiToggleButton-root": {
+                            border: "none",
+                            borderRadius: "10px",
+                            px: 3,
+                            py: 1,
+                            textTransform: "none",
+                            fontWeight: 600,
+                            color: "#555",
+                            transition:
+                                "all .3s cubic-bezier(.4,0,.2,1)",
+
+                            "&:hover": {
+                                backgroundColor: "#EAF2FF",
+                                transform: "translateY(-2px)",
+                            },
+                        },
+
+                        "& .Mui-selected": {
+                            backgroundColor: "#1976d2 !important",
+                            color: "#fff !important",
+                            boxShadow:
+                                "0 8px 20px rgba(25,118,210,.30)",
+                            transform: "translateY(-2px)",
+                        },
                     }}
                 >
-                    <InputLabel>
-                        Status
-                    </InputLabel>
+                    <ToggleButton value="APPLIED">
+                        Applied
+                    </ToggleButton>
 
-                    <Select
-                        value={status}
-                        label="Status"
-                        onChange={(e) =>
-                            setStatus(
-                                e.target.value
-                            )
-                        }
-                    >
-                        <MenuItem value="APPLIED">
-                            Applied
-                        </MenuItem>
+                    <ToggleButton value="SHORTLISTED">
+                        Shortlisted
+                    </ToggleButton>
 
-                        <MenuItem value="SHORTLISTED">
-                            Shortlisted
-                        </MenuItem>
+                    <ToggleButton value="SELECTED">
+                        Selected
+                    </ToggleButton>
 
-                        <MenuItem value="SELECTED">
-                            Selected
-                        </MenuItem>
-
-                        <MenuItem value="REJECTED">
-                            Rejected
-                        </MenuItem>
-                    </Select>
-                </FormControl>
+                    <ToggleButton value="REJECTED">
+                        Rejected
+                    </ToggleButton>
+                </ToggleButtonGroup>
             </Box>
 
             {loading && (
@@ -172,10 +203,11 @@ const CoordinatorApplicationsPage = () => {
                 0 && (
                     <TableContainer
                         component={Paper}
-                        sx={{ mt: 3,
-                            maxHeight: 500,
+                        sx={{
+                            mt: 3,
                             borderRadius: 3,
-                            boxShadow: 3,}}
+                            boxShadow: 3,
+                        }}
                     >
                         <Table stickyHeader>
 
@@ -275,6 +307,29 @@ const CoordinatorApplicationsPage = () => {
                         </Table>
                     </TableContainer>
                 )}
+            {!loading && totalPages > 1 && (
+                <Stack
+                    spacing={2}
+                    alignItems="center"
+                    sx={{
+                        mt: 3,
+                        mb: 2,
+                    }}
+                >
+                    <Pagination
+                        count={totalPages}
+                        page={page + 1}
+                        onChange={(event, value) =>
+                            setPage(value - 1)
+                        }
+                        color="primary"
+                        shape="rounded"
+                        size="large"
+                        showFirstButton
+                        showLastButton
+                    />
+                </Stack>
+            )}
             <ApplicationDetailsDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}

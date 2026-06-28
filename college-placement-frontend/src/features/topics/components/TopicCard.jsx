@@ -18,12 +18,36 @@ const TopicCard = ({ topic ,onViewDetails}) => {
     return (
         <Card
             sx={{
+                position: "relative",
+                overflow: "hidden",
                 borderRadius: 3,
                 height: "100%",
-                transition: "0.3s",
+                transition: "all .3s ease",
+                cursor: "pointer",
+
+                "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: 0,
+                    height: "4px",
+                    background:
+                        "linear-gradient(90deg, #1976d2, #42a5f5)",
+                    transition: "width .35s ease",
+                },
+
                 "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: 6,
+                    transform: "translateY(-6px)",
+                    boxShadow: "0 16px 30px rgba(0,0,0,.12)",
+                    filter: "brightness(1.02)",
+                },
+
+                "&:hover::before": {
+                    width: "100%",
+                },
+                "&:hover .company-title": {
+                    color: "#1976d2",
                 },
             }}
         >
@@ -40,6 +64,7 @@ const TopicCard = ({ topic ,onViewDetails}) => {
                     >
                         <Typography
                             variant="h6"
+                            className="company-title"
                             sx={{
                                 fontWeight: 700,
                                 fontSize: "1.15rem",

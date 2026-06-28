@@ -56,22 +56,43 @@ export const getStudentDetails =
 
         return response.data;
     };
-export const getActiveCompanies = async () => {
+export const getActiveCompanies = async (page = 0, size = 10) => {
     const response = await axiosInstance.get(
-        "/api/companies/active"
+        "/api/companies/active",
+        {
+            params: {
+                page,
+                size,
+            },
+        }
     );
+
     return response.data;
 };
-export const getExpiredCompanies = async () => {
+export const getExpiredCompanies = async (page = 0, size = 10) => {
     const response = await axiosInstance.get(
-        "/api/companies/expired"
+        "/api/companies/expired",
+        {
+            params: {
+                page,
+                size,
+            },
+        }
     );
+
     return response.data;
 };
-export const getAllCompanies = async () => {
+export const getAllCompanies = async (page = 0, size = 10) => {
     const response = await axiosInstance.get(
-        "/api/companies"
+        "/api/companies",
+        {
+            params: {
+                page,
+                size,
+            },
+        }
     );
+
     return response.data;
 };
 export const getCompanyById = async (companyId) => {
@@ -114,16 +135,19 @@ export const deleteCompany =
     };
 
 export const getApplications = async (
-    status = "APPLIED"
+    status = "APPLIED",
+    page = 0,
+    size = 10
 ) => {
+
     const response =
         await axiosInstance.get(
             "/api/applications",
             {
                 params: {
                     status,
-                    page: 0,
-                    size: 10,
+                    page,
+                    size,
                     sort: "id,DESC",
                 },
             }
@@ -318,6 +342,20 @@ export const getStudentByRollNumber = async (
 ) => {
     const response = await axiosInstance.get(
         `/api/students/roll-number/${rollNumber}`
+    );
+
+    return response.data;
+};
+export const searchCompanies = async (params, page, size) => {
+    const response = await axiosInstance.get(
+        "/api/companies/search",
+        {
+            params: {
+                ...params,
+                page,
+                size,
+            },
+        }
     );
 
     return response.data;

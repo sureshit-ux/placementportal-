@@ -3,14 +3,18 @@ import { useEffect, useState } from "react";
 import {
     Box,
     Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     CircularProgress,
     Grid,
+    ToggleButton,
+    ToggleButtonGroup,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 
+import KeyboardArrowLeftIcon
+    from "@mui/icons-material/KeyboardArrowLeft";
+
+import KeyboardArrowRightIcon
+    from "@mui/icons-material/KeyboardArrowRight";
 import CertificateTemplateCard from "../../certificates/components/CertificateTemplateCard";
 import {
     getCertificatesByStatus,
@@ -20,8 +24,18 @@ import {
 import AppSnackbar from "../../../components/common/AppSnackbar.jsx";
 
 const CoordinatorCertificatesPage = () => {
+
     const [status, setStatus] =
         useState("PENDING");
+
+    const [page, setPage] =
+        useState(0);
+
+    const [size] =
+        useState(4);
+
+    const [totalPages, setTotalPages] =
+        useState(0);
 
     const [certificates, setCertificates] =
         useState([]);
@@ -42,11 +56,17 @@ const CoordinatorCertificatesPage = () => {
         try {
             const response =
                 await getCertificatesByStatus(
-                    status
+                    status,
+                    page,
+                    size
                 );
 
             setCertificates(
                 response.content || []
+            );
+
+            setTotalPages(
+                response.totalPages || 0
             );
         } catch (error) {
             console.error(error);
@@ -57,10 +77,15 @@ const CoordinatorCertificatesPage = () => {
 
     useEffect(() => {
         fetchCertificates();
+    }, [
+        status,
+        page,
+    ]);
+    useEffect(() => {
+
+        setPage(0);
 
     }, [status]);
-
-
     const handleApprove = async (id) => {
         try {
             await approveCertificate(id);
@@ -104,50 +129,97 @@ const CoordinatorCertificatesPage = () => {
         }
     };
 
+
     return (
+
         <Box>
-            <Typography
-                variant="h5"
-                fontWeight={700}
+
+            <Box
+                sx={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 10,
+                    backgroundColor: "#f5f7fb",
+                    pt: 1,
+                    pb: 2,
+                }}
             >
-                Certificates
-            </Typography>
 
-            <Box sx={{ mt: 2, mb: 4 }}>
-                <FormControl
-                    size="small"
-                    sx={{ minWidth: 220 }}
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
                 >
-                    <InputLabel>
-                        Status
-                    </InputLabel>
+                <Typography
+                    variant="h5"
+                    fontWeight={700}
+                >
+                    Certificates
+                </Typography>
 
-                    <Select
-                        value={status}
-                        label="Status"
-                        onChange={(e) =>
-                            setStatus(
-                                e.target.value
-                            )
+                <ToggleButtonGroup
+                    exclusive
+                    value={status}
+                    onChange={(e, value) => {
+                        if (value !== null) {
+                            setStatus(value);
                         }
-                    >
-                        <MenuItem value="PENDING">
-                            Pending
-                        </MenuItem>
+                    }}
+                    sx={{
+                        backgroundColor: "#F5F7FA",
+                        borderRadius: "14px",
+                        p: "4px",
 
-                        <MenuItem value="APPROVED">
-                            Approved
-                        </MenuItem>
+                        "& .MuiToggleButton-root": {
+                            border: "none",
+                            borderRadius: "10px",
+                            px: 3,
+                            py: 1,
+                            textTransform: "none",
+                            fontWeight: 600,
+                            color: "#555",
 
-                        <MenuItem value="REJECTED">
-                            Rejected
-                        </MenuItem>
-                    </Select>
-                </FormControl>
+                            "&:hover": {
+                                backgroundColor: "#EAF2FF",
+                            },
+                        },
+
+                        "& .Mui-selected": {
+                            backgroundColor:
+                                "#1976d2 !important",
+                            color:
+                                "#fff !important",
+                            boxShadow:
+                                "0 8px 20px rgba(25,118,210,.30)",
+                        },
+                    }}
+                >
+                    <ToggleButton value="PENDING">
+                        Pending
+                    </ToggleButton>
+
+                    <ToggleButton value="APPROVED">
+                        Approved
+                    </ToggleButton>
+
+                    <ToggleButton value="REJECTED">
+                        Rejected
+                    </ToggleButton>
+                </ToggleButtonGroup>
+
+                </Box>
+
             </Box>
 
             {loading && (
-                <Box textAlign="center">
+                <Box
+                    sx={{
+                        textAlign: "center",
+                        mt: 5,
+                    }}
+                >
                     <CircularProgress />
                 </Box>
             )}
@@ -161,35 +233,129 @@ const CoordinatorCertificatesPage = () => {
                 )}
 
             {!loading &&
-                certificates.length >
-                0 && (
-                    <Grid
-                        container
-                        spacing={3}
+                certificates.length > 0 && (
+
+                    <Box
+                        sx={{
+                            mt: 3,
+
+                            height: "98vh",
+                            overflowY: "auto",
+                            pr: 1,
+                        }}
                     >
-                        {certificates.map(
-                            (
-                                certificate
-                            ) => (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={6}
-                                    lg={4}
-                                    key={
-                                        certificate.id
-                                    }
-                                >
-                                    <CertificateTemplateCard
-                                        certificate={certificate}
-                                        showActions={true}
-                                        onApprove={handleApprove}
-                                        onReject={handleReject}
-                                    />
-                                </Grid>
-                            )
-                        )}
-                    </Grid>
+
+                        <Box
+                            sx={{
+                                maxWidth: 1200,
+                                mx: "auto",
+                            }}
+                        >
+
+                            <Grid
+                                container
+                                spacing={3}
+                            >
+                                {certificates.map(
+                                    (certificate) => (
+
+                                        <Grid
+                                            size={{
+                                                xs: 12,
+                                                sm: 6,
+                                                md: 6,
+                                                lg: 4,
+                                            }}
+                                            key={certificate.id}
+                                        >
+
+                                            <CertificateTemplateCard
+                                                certificate={certificate}
+                                                showActions
+                                                onApprove={handleApprove}
+                                                onReject={handleReject}
+                                            />
+
+                                        </Grid>
+
+                                    )
+                                )}
+                            </Grid>
+
+                        </Box>
+
+                    </Box>
+
+                )}
+            {!loading &&
+                totalPages > 1 && (
+
+                    <>
+
+                        <IconButton
+                            disabled={page === 0}
+                            onClick={() =>
+                                setPage((prev) => prev - 1)
+                            }
+                            sx={{
+                                position: "fixed",
+                                left: 30,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                width: 54,
+                                height: 54,
+                                borderRadius: "50%",
+                                bgcolor: "white",
+                                boxShadow: 3,
+                                zIndex: 1000,
+
+                                "&:hover": {
+                                    bgcolor: "#1976d2",
+                                    color: "#fff",
+                                },
+
+                                "&.Mui-disabled": {
+                                    bgcolor: "#f2f2f2",
+                                },
+                            }}
+                        >
+                            <KeyboardArrowLeftIcon />
+                        </IconButton>
+
+                        <IconButton
+                            disabled={
+                                page === totalPages - 1
+                            }
+                            onClick={() =>
+                                setPage((prev) => prev + 1)
+                            }
+                            sx={{
+                                position: "fixed",
+                                right: 30,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                width: 54,
+                                height: 54,
+                                borderRadius: "50%",
+                                bgcolor: "white",
+                                boxShadow: 3,
+                                zIndex: 1000,
+
+                                "&:hover": {
+                                    bgcolor: "#1976d2",
+                                    color: "#fff",
+                                },
+
+                                "&.Mui-disabled": {
+                                    bgcolor: "#f2f2f2",
+                                },
+                            }}
+                        >
+                            <KeyboardArrowRightIcon />
+                        </IconButton>
+
+                    </>
+
                 )}
             <AppSnackbar
                 open={snackbar.open}
